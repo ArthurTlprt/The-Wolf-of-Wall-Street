@@ -44,6 +44,10 @@ def patternRecognition():
             print("=======================================")
             print("predicted outcome", performanceAr[patdex])
             xp = range(1, 11)
+            fig = plt.figure()
+            plt.plot(xp, patForRec)
+            plt.plot(xp, eachPattern)
+            plt.show()
             print("#######################################")
 
 
