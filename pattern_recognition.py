@@ -27,15 +27,16 @@ patternAr = []
 performanceAr = []
 avgLine = ((bid+ask)/2)
 patForRec = []
+patternSize = 30
 
 
 def patternRecognition():
     for eachPattern in patternAr:
         sim = []
-        for i in range(10):
+        for i in range(patternSize):
             sim.append(100.00 - abs(percentChange(eachPattern[i], patForRec[i])))
         howSim = sum(sim)/10.00
-        if howSim > 70:
+        if howSim > 90:
             patdex = patternAr.index(eachPattern)
             print("#######################################")
             print(patForRec)
@@ -43,7 +44,7 @@ def patternRecognition():
             print(eachPattern )
             print("=======================================")
             print("predicted outcome", performanceAr[patdex])
-            xp = range(1, 11)
+            xp = range(1, patternSize+1)
             fig = plt.figure()
             plt.plot(xp, patForRec)
             plt.plot(xp, eachPattern)
@@ -52,24 +53,30 @@ def patternRecognition():
 
 
 def currentPattern():
-    for i in range(10):
-        patForRec.append(percentChange(avgLine[-11], avgLine[i-10]))
+    for i in range(patternSize):
+        patForRec.append(percentChange(avgLine[-patternSize-1], avgLine[i-patternSize]))
     print(patForRec)
 
 def percentChange(startPoint,currentPoint):
-    return ((currentPoint-startPoint)/abs(startPoint))*100.00
+    try:
+        x = ((currentPoint-startPoint)/abs(startPoint))*100.00
+        if x == 0.0:
+            return 0.0000001
+        return x
+    except:
+        return 0.0000001
 
 
 def patternStorage():
     patStartTime = time.time()
     x = len(avgLine)-30
 
-    y = 11
+    y = patternSize+1
     while y < x:
         p = []
         pattern = []
-        for i in reversed(range(10)):
-            p.append(percentChange(avgLine[y-10], avgLine[y-i]))
+        for i in reversed(range(patternSize)):
+            p.append(percentChange(avgLine[y-patternSize], avgLine[y-i]))
         outcomeRange = avgLine[y+20:y+30]
         currentPoint = avgLine[y]
         avgOutcome = sum(outcomeRange) / len(outcomeRange)
